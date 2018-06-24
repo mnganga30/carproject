@@ -296,7 +296,6 @@ void onMethod()
   while (average >= 1000)
   {
         digitalWrite(starter, RELAY_ON);
-         // subtract the last reading:
   total = total - readings[readIndex];
   // read from the sensor:
   readings[readIndex] = analogRead(inputPin);
@@ -323,6 +322,7 @@ void accMethod()
 {
     digitalWrite(ledPin, HIGH);
     digitalWrite(acc, RELAY_ON);
+  
     if (firstClearacc == true)
     {
         lcd.clear(); // Clears the display 
@@ -330,6 +330,9 @@ void accMethod()
     }  
     lcd.setCursor(0, 1);
     lcd.print(" Accessies Mode"); // Prints "Arduino" on the LCD 
+      delay(1);        // delay in between reads for stability
+
+         // subtract the last reading:
 }
 
 
@@ -342,6 +345,46 @@ void offMethod()
     digitalWrite(on, RELAY_OFF);
     digitalWrite(start, RELAY_OFF);
     digitalWrite(acc, RELAY_OFF);
+
+     total = total - readings[readIndex];
+  // read from the sensor:
+  readings[readIndex] = analogRead(inputPin);
+  // add the reading to the total:
+  total = total + readings[readIndex];
+  // advance to the next position in the array:
+  readIndex = readIndex + 1;
+
+  // if we're at the end of the array...
+  if (readIndex >= numReadings)
+    // ...wrap around to the beginning:
+    readIndex = 0;
+
+  // calculate the average:
+  average = total / numReadings;
+  // send it to the computer as ASCII digits
+  Serial.println(average);
+  while (average >= 1000)
+  {
+ buttonPushCounter =2;
+ // subtract the last reading:
+  total = total - readings[readIndex];
+  // read from the sensor:
+  readings[readIndex] = analogRead(inputPin);
+  // add the reading to the total:
+  total = total + readings[readIndex];
+  // advance to the next position in the array:
+  readIndex = readIndex + 1;
+
+  // if we're at the end of the array...
+  if (readIndex >= numReadings)
+    // ...wrap around to the beginning:
+    readIndex = 0;
+
+  // calculate the average:
+  average = total / numReadings;
+  // send it to the computer as ASCII digits
+  Serial.println(average);
+  }
     if (begins == true)
     {
         if (firstClear == true)
